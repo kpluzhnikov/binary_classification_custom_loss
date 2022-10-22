@@ -4,5 +4,6 @@ User define functions to calculate the custom logloss in some ML packages and an
 Repository to introduce the custom loss function for binary classification in different python ML packages:
 - XGBoost core API
 - XGBoost sklearn API
+- LightGBM sklearn API
 - more to come
 - example on a Titanic dataset (XGBoost sklearn API)
