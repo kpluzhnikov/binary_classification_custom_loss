@@ -1,0 +1,79 @@
+from catboost import CatBoostClassifier, Pool, metrics
+
+class LoglossObjective(object):
+  def __init__(self, beta = .4):
+    super().__init__()
+    self.beta = beta
+
+  def calc_ders_range(self, approxes, targets, weights):
+      assert len(approxes) == len(targets)
+      if weights is not None:
+          assert len(weights) == len(approxes)
+
+      result = []
+      for index in range(len(targets)):
+          e = np.exp(approxes[index])
+          p = e / (1 + e)
+          der1 = targets[index] - p * (targets[index] + self.beta - \
+                                        self.beta * targets[index])
+          der2 = -p * (1 - p) * (targets[index] + self.beta - \
+                                        self.beta * targets[index])
+
+          if weights is not None:
+              der1 *= weights[index]
+              der2 *= weights[index]
+
+          result.append((der1, der2))
+      return result
+      
+class LoglossMetric(object):
+  def __init__(self, beta = .4):
+    super().__init__()
+    self.beta = beta
+
+  def get_final_error(self, error, weight):
+      return error / (weight + 1e-38)
+
+  def is_max_optimal(self):
+      return False
+
+  def evaluate(self, approxes, target, weight):
+      assert len(approxes) == 1
+      assert len(target) == len(approxes[0])
+
+      approx = approxes[0]
+
+      error_sum = 0.0
+      weight_sum = 0.0
+
+      for i in range(len(approx)):
+          e = np.exp(approx[i])
+          p = e / (1 + e)
+          w = 1.0 if weight is None else weight[i]
+          weight_sum += w
+          error_sum += -w * (target[i] * np.log(p) + self.beta * \
+                              (1 - target[i]) * np.log(1 - p))
+
+      return error_sum, weight_sum
+
+params = {
+    'iterations': 3000,
+    'learning_rate': 0.1,
+    'random_seed': 1,
+    'logging_level': 'Verbose',
+    'od_type': 'Iter',
+    'od_wait': 10
+}
+train_pool = Pool(X_train, y_train)
+validate_pool = Pool(X_val, y_val)
+
+cb = CatBoostClassifier(loss_function=LoglossObjective(.4),
+                        eval_metric=LoglossMetric(.4),**params)
+cb.fit(train_pool, eval_set=validate_pool)
+
+# model predict
+pred_proba_train = cb.predict_proba(X_train)
+pred_proba_val = cb.predict_proba(X_val)
+
+y_pred_train = [1 if pred_proba_train[i][1] > .5 else 0 for i in range(len(pred_proba_train))]
+y_pred_val = [1 if pred_proba_val[i][1] > .5 else 0 for i in range(len(pred_proba_val))]
