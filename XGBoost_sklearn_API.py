@@ -20,4 +20,4 @@ def logreg_err_beta_sklearn(predt, dmat):
     predt = np.clip(predt, 10e-7, 1-10e-7)
     loss_fn = y * np.log(predt)
     loss_fp=(1.0 - y) * np.log(1.0 - predt)
-    return 'logreg_error',np.sum(-1 * (loss_fn + beta * loss_fp))/len(y)
+    return 'logreg_error', np.sum(-1 * (loss_fn + beta * loss_fp))/len(y)
