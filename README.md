@@ -5,5 +5,7 @@ Repository to introduce the custom loss function for binary classification in di
 - XGBoost core API
 - XGBoost sklearn API
 - LightGBM sklearn API
-- more to come
-- example on a Titanic dataset (XGBoost sklearn API)
+- CatBoost core API
+- TensorFlow core API
+- basic model for a Titanic dataset (XGBoost sklearn API)
+- basic model for TensorFlow
