@@ -3,7 +3,7 @@ import tensorflow as tf
 class MyCallback(tf.keras.callbacks.Callback):
     def on_epoch_end(self,epoch,logs={}):
         if logs.get('val_loss')<0.3:
-            print('\nReached 80.0% binary crossentropy so canceling training')
+            print('\nReached 30.0% binary crossentropy so canceling training')
             self.model.stop_training=True
             
 def custom_loss(pos_weight):
