@@ -10,4 +10,5 @@ Repository to introduce the custom loss function for binary classification in di
 - basic model for a Titanic dataset (XGBoost sklearn API)
 - basic model for TensorFlow
 
-For some wording, please see -> https://pub.towardsai.net/outline-a-smaller-class-with-the-custom-loss-function-94ff00359698
+For some wording, please see (XGBoost) -> https://pub.towardsai.net/outline-a-smaller-class-with-the-custom-loss-function-94ff00359698
+For TF, LightGBM, CatBoost -> https://medium.com/towards-artificial-intelligence/deal-with-an-imbalanced-dataset-with-tensorflow-lightgbm-and-catboost-b2476996d145
